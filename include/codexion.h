@@ -33,6 +33,7 @@
 **
 **  No lock needed (set before threads start, only read afterwards):
 **  sim->p, sim->start_time, coder->id, coder->first / second, coder->sim
+**  sim->sync_* receipts (only touched by main thread, before / after)
 ** ------------------------------------------------------------------
 */
 
@@ -101,15 +102,24 @@ typedef struct s_sim
 	pthread_mutex_t	stop_mutex;
 	pthread_mutex_t	print_mutex;
 	pthread_t		monitor;
+	int				sync_globals;
+	int				sync_coders;
+	int				sync_dongles;
 }	t_sim;
 
 /* parsing.c         */
 int		parse_args(int argc, char **argv, t_params *p);
 
 /* init.c            */
+int		init_sim(t_sim *sim, t_params *p);
+
 /* init_sync.c       */
+int		init_sync(t_sim *sim);
+
 /* threads.c         */
 /* cleanup.c         */
+void	cleanup(t_sim *sim);
+
 /* time.c            */
 long	get_time_ms(void);
 long	elapsed_ms(t_sim *sim);

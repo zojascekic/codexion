@@ -13,24 +13,23 @@
 #include "codexion.h"
 
 /*
-** main.c  (2/5 functions)
+** main.c  (1/5 functions, run_simulation comes on Day 2)
 **
 **   int  main(int argc, char **argv)
-**       -> parse_args -> init_sim -> start threads -> join -> cleanup
-**          returns 1 on any error
-**   static int  run_simulation(t_sim *sim)
-**       -> start coders + monitor, wait for them, return status
+**       parse -> init_sim -> init_sync -> (run) -> cleanup
 */
 
 int	main(int argc, char **argv)
 {
 	t_params	p;
+	t_sim		sim;
+	int			ok;
 
 	if (!parse_args(argc, argv, &p))
 		return (1);
-	printf("TEMP coders=%d burnout=%d compile=%d debug=%d\n",
-		p.n_coders, p.t_burnout, p.t_compile, p.t_debug);
-	printf("TEMP refactor=%d required=%d cooldown=%d sched=%d\n",
-		p.t_refactor, p.compiles_required, p.cooldown, p.sched);
-	return (0);
+	ok = init_sim(&sim, &p) && init_sync(&sim);
+	if (!ok)
+		fprintf(stderr, "Error: setup failed\n");
+	cleanup(&sim);
+	return (!ok);
 }
