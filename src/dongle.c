@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dongle.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: Zoja <Zoja@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/22 14:01:39 by Zoja              #+#    #+#             */
+/*   Updated: 2026/11/22 14:01:40 by Zoja             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include "codexion.h"
 
 /*
@@ -6,7 +19,7 @@
 **   int   take_both(t_coder *c)
 **       -> lock order: lower-index dongle first, then the other; log each take
 **   int   dongle_request(t_dongle *d, t_coder *c)
-**       -> build t_request (seq, deadline), heap_push under d->mutex
+**       -> under d->mutex: seq = d->next_seq++, deadline = last_compile + t_burnout, heap_push
 **   int   dongle_take(t_dongle *d, t_coder *c)
 **       -> wait_for_dongle, then pop, holder = c->id; 0 if stopped
 **   void  dongle_release(t_dongle *d)

@@ -1,3 +1,4 @@
 obj/
 codexion
 *.dSYM/
+tests/
