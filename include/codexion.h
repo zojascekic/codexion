@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #ifndef CODEXION_H
 # define CODEXION_H
 
@@ -105,6 +104,8 @@ typedef struct s_sim
 }	t_sim;
 
 /* parsing.c         */
+int		parse_args(int argc, char **argv, t_params *p);
+
 /* init.c            */
 /* init_sync.c       */
 /* threads.c         */
