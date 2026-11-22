@@ -111,8 +111,18 @@ int		parse_args(int argc, char **argv, t_params *p);
 /* threads.c         */
 /* cleanup.c         */
 /* time.c            */
+long	get_time_ms(void);
+long	elapsed_ms(t_sim *sim);
+void	precise_sleep(t_sim *sim, long ms);
+
 /* log.c             */
+void	log_state(t_coder *c, const char *msg);
+void	log_burnout(t_sim *sim, int id);
+
 /* state.c           */
+int		is_stopped(t_sim *sim);
+void	set_stopped(t_sim *sim);
+
 /* state_coder.c     */
 /* heap.c            */
 /* heap_utils.c      */

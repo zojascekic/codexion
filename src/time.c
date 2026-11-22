@@ -13,14 +13,33 @@
 #include "codexion.h"
 
 /*
-** time.c  (4/5 functions)
+** time.c  (3/5 functions)
 **
-**   long  get_time_ms(void)
-**       -> gettimeofday -> milliseconds
-**   long  elapsed_ms(t_sim *sim)
-**       -> get_time_ms() - sim->start_time (used in logs)
-**   void  precise_sleep(t_sim *sim, long ms)
-**       -> loop of short usleep(500) until ms passed OR is_stopped
-**   void  ms_to_timespec(long abs_ms, struct timespec *ts)
-**       -> absolute time for pthread_cond_timedwait
+**   long  get_time_ms(void)                     wall clock in ms
+**   long  elapsed_ms(t_sim *sim)                ms since simulation start
+**   void  precise_sleep(t_sim *sim, long ms)    small naps, stops early
+**
+**   Day 4 adds: ms_to_timespec (for pthread_cond_timedwait)
 */
+
+long	get_time_ms(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000L + tv.tv_usec / 1000);
+}
+
+long	elapsed_ms(t_sim *sim)
+{
+	return (get_time_ms() - sim->start_time);
+}
+
+void	precise_sleep(t_sim *sim, long ms)
+{
+	long	start;
+
+	start = get_time_ms();
+	while (!is_stopped(sim) && get_time_ms() - start < ms)
+		usleep(500);
+}
