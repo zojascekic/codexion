@@ -13,14 +13,58 @@
 #include "codexion.h"
 
 /*
-** heap_utils.c  (4/5 functions)
+** heap_utils.c  (3/5 functions)
 **
 **   void  heap_swap(t_request *a, t_request *b)
-**       -> swap two entries
-**   void  sift_up(t_heap *h, int i, t_sched s)
-**       -> while parent is 'after' i (compare_requests) -> swap, go up
-**   void  sift_down(t_heap *h, int i, t_sched s)
-**       -> swap with best child while child is 'before' i
-**   int   heap_remove_id(t_heap *h, int coder_id, t_sched s)
-**       -> remove a coder's request (needed if not popped on take)
+**   void  sift_up(t_heap *h, int i, t_sched s)     bubble up (push)
+**   void  sift_down(t_heap *h, int i, t_sched s)   sink down (pop)
+**
+** Array math:  parent = (i - 1) / 2   children = 2i + 1, 2i + 2
+** "a goes first" = compare_requests(a, b, s) < 0   (scheduler.c)
 */
+
+void	heap_swap(t_request *a, t_request *b)
+{
+	t_request	tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+void	sift_up(t_heap *h, int i, t_sched s)
+{
+	int	parent;
+
+	while (i > 0)
+	{
+		parent = (i - 1) / 2;
+		if (compare_requests(&h->data[i], &h->data[parent], s) >= 0)
+			return ;
+		heap_swap(&h->data[i], &h->data[parent]);
+		i = parent;
+	}
+}
+
+void	sift_down(t_heap *h, int i, t_sched s)
+{
+	int	best;
+	int	child;
+
+	while (1)
+	{
+		best = i;
+		child = 2 * i + 1;
+		if (child < h->size
+			&& compare_requests(&h->data[child], &h->data[best], s) < 0)
+			best = child;
+		child = 2 * i + 2;
+		if (child < h->size
+			&& compare_requests(&h->data[child], &h->data[best], s) < 0)
+			best = child;
+		if (best == i)
+			return ;
+		heap_swap(&h->data[i], &h->data[best]);
+		i = best;
+	}
+}

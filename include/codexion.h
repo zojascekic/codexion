@@ -108,35 +108,47 @@ typedef struct s_sim
 }	t_sim;
 
 /* parsing.c         */
-int		parse_args(int argc, char **argv, t_params *p);
+int			parse_args(int argc, char **argv, t_params *p);
 
 /* init.c            */
-int		init_sim(t_sim *sim, t_params *p);
+int			init_sim(t_sim *sim, t_params *p);
 
 /* init_sync.c       */
-int		init_sync(t_sim *sim);
+int			init_sync(t_sim *sim);
 
 /* threads.c         */
 /* cleanup.c         */
-void	cleanup(t_sim *sim);
+void		cleanup(t_sim *sim);
 
 /* time.c            */
-long	get_time_ms(void);
-long	elapsed_ms(t_sim *sim);
-void	precise_sleep(t_sim *sim, long ms);
+long		get_time_ms(void);
+long		elapsed_ms(t_sim *sim);
+void		precise_sleep(t_sim *sim, long ms);
 
 /* log.c             */
-void	log_state(t_coder *c, const char *msg);
-void	log_burnout(t_sim *sim, int id);
+void		log_state(t_coder *c, const char *msg);
+void		log_burnout(t_sim *sim, int id);
 
 /* state.c           */
-int		is_stopped(t_sim *sim);
-void	set_stopped(t_sim *sim);
+int			is_stopped(t_sim *sim);
+void		set_stopped(t_sim *sim);
 
 /* state_coder.c     */
 /* heap.c            */
+int			heap_init(t_heap *h, int capacity);
+int			heap_push(t_heap *h, t_request req, t_sched s);
+t_request	heap_pop(t_heap *h, t_sched s);
+t_request	*heap_peek(t_heap *h);
+void		heap_free(t_heap *h);
+
 /* heap_utils.c      */
+void		heap_swap(t_request *a, t_request *b);
+void		sift_up(t_heap *h, int i, t_sched s);
+void		sift_down(t_heap *h, int i, t_sched s);
+
 /* scheduler.c       */
+int			compare_requests(t_request *a, t_request *b, t_sched s);
+
 /* dongle.c          */
 /* dongle_wait.c     */
 /* coder.c           */

@@ -15,10 +15,39 @@
 /*
 ** scheduler.c  (3/5 functions)
 **
-**   int   compare_requests(t_request *a, t_request *b, t_sched s)
-**       -> <0 if a goes first; switch on s -> fifo / edf
+**   int         compare_requests(t_request *a, t_request *b, t_sched s)
 **   static int  compare_fifo(t_request *a, t_request *b)
-**       -> smaller arrival seq first   (LIFO recode: bigger seq first)
 **   static int  compare_edf(t_request *a, t_request *b)
-**       -> smaller deadline first, tie-break -> compare_fifo / coder id
+**
+** Answer to "does a go before b?":  < 0 yes,  > 0 no.
+** FIFO: smaller seq first.  EDF: smaller deadline, tie -> smaller seq.
 */
+
+static int	compare_fifo(t_request *a, t_request *b)
+{
+	if (a->seq < b->seq)
+		return (-1);
+	if (a->seq > b->seq)
+		return (1);
+	return (0);
+}
+
+static int	compare_edf(t_request *a, t_request *b)
+{
+	if (a->deadline < b->deadline)
+		return (-1);
+	if (a->deadline > b->deadline)
+		return (1);
+	if (a->seq < b->seq)
+		return (-1);
+	if (a->seq > b->seq)
+		return (1);
+	return (0);
+}
+
+int	compare_requests(t_request *a, t_request *b, t_sched s)
+{
+	if (s == EDF)
+		return (compare_edf(a, b));
+	return (compare_fifo(a, b));
+}

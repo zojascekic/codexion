@@ -3,3 +3,4 @@ codexion
 *.dSYM/
 tests/
 test_fail
+test_heap
