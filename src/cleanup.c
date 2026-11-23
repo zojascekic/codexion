@@ -20,19 +20,25 @@
 **   static void  destroy_coders(t_sim *sim)
 **   static void  destroy_global_mutexes(t_sim *sim)
 **
-** Safe on a half-built sim: loops only go up to the receipts,
-** and free(NULL) does nothing. (Day 2: heap_free per dongle.)
+** Safe on a half-built sim: mutex loops only go up to the receipts,
+** and free(NULL) does nothing (heaps never created have data = NULL).
 */
 
 static void	destroy_dongles(t_sim *sim)
 {
 	int	i;
 
+	if (!sim->dongles)
+		return ;
 	i = 0;
-	while (i < sim->sync_dongles)
+	while (i < sim->n_dongles)
 	{
-		pthread_mutex_destroy(&sim->dongles[i].mutex);
-		pthread_cond_destroy(&sim->dongles[i].cond);
+		if (i < sim->sync_dongles)
+		{
+			pthread_mutex_destroy(&sim->dongles[i].mutex);
+			pthread_cond_destroy(&sim->dongles[i].cond);
+		}
+		heap_free(&sim->dongles[i].queue);
 		i++;
 	}
 	free(sim->dongles);

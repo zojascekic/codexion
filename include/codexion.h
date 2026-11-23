@@ -134,6 +134,11 @@ int			is_stopped(t_sim *sim);
 void		set_stopped(t_sim *sim);
 
 /* state_coder.c     */
+long		get_last_compile(t_coder *c);
+void		set_last_compile(t_coder *c, long t);
+int			get_compile_count(t_coder *c);
+void		inc_compile_count(t_coder *c);
+
 /* heap.c            */
 int			heap_init(t_heap *h, int capacity);
 int			heap_push(t_heap *h, t_request req, t_sched s);

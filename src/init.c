@@ -13,13 +13,13 @@
 #include "codexion.h"
 
 /*
-** init.c  (4/5 functions, init_dongles comes on Day 2 with the heap)
+** init.c  (5/5 functions)
 **
 **   int          init_sim(t_sim *sim, t_params *p)
 **   static int   alloc_coders(t_sim *sim)
 **   static int   alloc_dongles(t_sim *sim)
+**   static int   init_dongles(t_sim *sim)   one heap (capacity 2) each
 **   static void  link_coder(t_sim *sim, int i)
-**   (Day 2)      init_dongles: heap_init for each dongle
 */
 
 static int	alloc_coders(t_sim *sim)
@@ -44,6 +44,20 @@ static int	alloc_dongles(t_sim *sim)
 	if (!sim->dongles)
 		return (0);
 	memset(sim->dongles, 0, size);
+	return (1);
+}
+
+static int	init_dongles(t_sim *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->n_dongles)
+	{
+		if (!heap_init(&sim->dongles[i].queue, 2))
+			return (0);
+		i++;
+	}
 	return (1);
 }
 
@@ -83,7 +97,7 @@ int	init_sim(t_sim *sim, t_params *p)
 
 	memset(sim, 0, sizeof(t_sim));
 	sim->p = *p;
-	if (!alloc_coders(sim) || !alloc_dongles(sim))
+	if (!alloc_coders(sim) || !alloc_dongles(sim) || !init_dongles(sim))
 		return (0);
 	sim->start_time = get_time_ms();
 	i = 0;

@@ -16,11 +16,44 @@
 ** state_coder.c  (4/5 functions)
 **
 **   long  get_last_compile(t_coder *c)
-**       -> read under c->mutex
 **   void  set_last_compile(t_coder *c, long t)
-**       -> write under c->mutex (at compile START)
 **   int   get_compile_count(t_coder *c)
-**       -> read under c->mutex
 **   void  inc_compile_count(t_coder *c)
-**       -> ++ under c->mutex
+**
+** Same pattern as is_stopped: lock, copy / change, unlock.
+** Written by the coder, read by the monitor -> c->mutex protects both.
 */
+
+long	get_last_compile(t_coder *c)
+{
+	long	t;
+
+	pthread_mutex_lock(&c->mutex);
+	t = c->last_compile;
+	pthread_mutex_unlock(&c->mutex);
+	return (t);
+}
+
+void	set_last_compile(t_coder *c, long t)
+{
+	pthread_mutex_lock(&c->mutex);
+	c->last_compile = t;
+	pthread_mutex_unlock(&c->mutex);
+}
+
+int	get_compile_count(t_coder *c)
+{
+	int	n;
+
+	pthread_mutex_lock(&c->mutex);
+	n = c->compile_count;
+	pthread_mutex_unlock(&c->mutex);
+	return (n);
+}
+
+void	inc_compile_count(t_coder *c)
+{
+	pthread_mutex_lock(&c->mutex);
+	c->compile_count++;
+	pthread_mutex_unlock(&c->mutex);
+}
