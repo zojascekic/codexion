@@ -155,7 +155,12 @@ void		sift_down(t_heap *h, int i, t_sched s);
 int			compare_requests(t_request *a, t_request *b, t_sched s);
 
 /* dongle.c          */
+int			take_both(t_coder *c);
+void		release_both(t_coder *c);
+
 /* dongle_wait.c     */
+int			wait_for_dongle(t_dongle *d, t_coder *c);
+
 /* coder.c           */
 /* coder_actions.c   */
 /* monitor.c         */
