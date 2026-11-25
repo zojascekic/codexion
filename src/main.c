@@ -6,18 +6,35 @@
 /*   By: Zoja <Zoja@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/22 14:02:03 by Zoja              #+#    #+#             */
-/*   Updated: 2026/11/22 14:02:04 by Zoja             ###   ########.fr       */
+/*   Updated: 2026/11/25 12:16:00 by Zoja             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
 /*
-** main.c  (1/5 functions, run_simulation comes on Day 2)
+** main.c  (2/5 functions)
 **
-**   int  main(int argc, char **argv)
-**       parse -> init_sim -> init_sync -> (run) -> cleanup
+**   static int  run_simulation(t_sim *sim)   start threads, wait for them
+**   int         main(int argc, char **argv)
+**       parse -> init_sim -> init_sync -> run_simulation -> cleanup
 */
+
+static int	run_simulation(t_sim *sim)
+{
+	int	created;
+
+	created = start_coders(sim);
+	if (created < sim->p.n_coders)
+	{
+		set_stopped(sim);
+		wake_all(sim);
+		join_coders(sim, created);
+		return (0);
+	}
+	join_coders(sim, created);
+	return (1);
+}
 
 int	main(int argc, char **argv)
 {
@@ -28,6 +45,8 @@ int	main(int argc, char **argv)
 	if (!parse_args(argc, argv, &p))
 		return (1);
 	ok = init_sim(&sim, &p) && init_sync(&sim);
+	if (ok)
+		ok = run_simulation(&sim);
 	if (!ok)
 		fprintf(stderr, "Error: setup failed\n");
 	cleanup(&sim);

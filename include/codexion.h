@@ -117,6 +117,9 @@ int			init_sim(t_sim *sim, t_params *p);
 int			init_sync(t_sim *sim);
 
 /* threads.c         */
+int			start_coders(t_sim *sim);
+void		join_coders(t_sim *sim, int n);
+
 /* cleanup.c         */
 void		cleanup(t_sim *sim);
 
@@ -132,6 +135,7 @@ void		log_burnout(t_sim *sim, int id);
 /* state.c           */
 int			is_stopped(t_sim *sim);
 void		set_stopped(t_sim *sim);
+void		wake_all(t_sim *sim);
 
 /* state_coder.c     */
 long		get_last_compile(t_coder *c);
@@ -162,7 +166,13 @@ void		release_both(t_coder *c);
 int			wait_for_dongle(t_dongle *d, t_coder *c);
 
 /* coder.c           */
+void		*coder_routine(void *arg);
+
 /* coder_actions.c   */
+void		do_compile(t_coder *c);
+void		do_debug(t_coder *c);
+void		do_refactor(t_coder *c);
+
 /* monitor.c         */
 
 #endif

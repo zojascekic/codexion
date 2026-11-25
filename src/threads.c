@@ -6,21 +6,43 @@
 /*   By: Zoja <Zoja@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/22 14:02:29 by Zoja              #+#    #+#             */
-/*   Updated: 2026/11/22 14:02:30 by Zoja             ###   ########.fr       */
+/*   Updated: 2026/11/25 08:26:07 by Zoja             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
 /*
-** threads.c  (4/5 functions)
+** threads.c  (2/5 functions, start_monitor comes on Day 4)
 **
-**   int  start_coders(t_sim *sim)
-**       -> pthread_create for each coder with coder_routine
-**   int  start_monitor(t_sim *sim)
-**       -> pthread_create the monitor with monitor_routine
-**   void join_all(t_sim *sim)
-**       -> pthread_join every coder thread that was created + the monitor
-**   void abort_start(t_sim *sim, int created)
-**       -> on create failure: set_stopped, wake all, join the 'created' threads
+**   int   start_coders(t_sim *sim)          returns how many started
+**   void  join_coders(t_sim *sim, int n)    wait for the first n coders
 */
+
+int	start_coders(t_sim *sim)
+{
+	int		i;
+	t_coder	*c;
+
+	i = 0;
+	while (i < sim->p.n_coders)
+	{
+		c = &sim->coders[i];
+		if (pthread_create(&c->thread, NULL, coder_routine, c) != 0)
+			return (i);
+		i++;
+	}
+	return (i);
+}
+
+void	join_coders(t_sim *sim, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		pthread_join(sim->coders[i].thread, NULL);
+		i++;
+	}
+}
