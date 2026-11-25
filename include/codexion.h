@@ -6,7 +6,7 @@
 /*   By: Zoja <Zoja@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/22 14:00:53 by Zoja              #+#    #+#             */
-/*   Updated: 2026/11/22 14:00:58 by Zoja             ###   ########.fr       */
+/*   Updated: 2026/11/25 12:58:17 by Zoja             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 **  sim->stop_mutex     -> sim->stopped
 **  sim->print_mutex    -> stdout (one log line at a time)
 **  coder->mutex        -> coder->last_compile, coder->compile_count
-**  dongle->mutex       -> dongle->holder, released_at, queue, next_seq
+**  dongle->mutex       -> dongle->holder, released_at, queue
 **  dongle->cond        -> used with dongle->mutex to sleep / wake waiters
 **
 **  No lock needed (set before threads start, only read afterwards):
@@ -76,7 +76,6 @@ typedef struct s_dongle
 	t_heap			queue;
 	int				holder;
 	long			released_at;
-	long			next_seq;
 }	t_dongle;
 
 typedef struct s_coder
@@ -119,6 +118,7 @@ int			init_sync(t_sim *sim);
 /* threads.c         */
 int			start_coders(t_sim *sim);
 void		join_coders(t_sim *sim, int n);
+int			start_monitor(t_sim *sim);
 
 /* cleanup.c         */
 void		cleanup(t_sim *sim);
@@ -127,6 +127,7 @@ void		cleanup(t_sim *sim);
 long		get_time_ms(void);
 long		elapsed_ms(t_sim *sim);
 void		precise_sleep(t_sim *sim, long ms);
+void		ms_to_timespec(long ms, struct timespec *ts);
 
 /* log.c             */
 void		log_state(t_coder *c, const char *msg);
@@ -163,7 +164,8 @@ int			take_both(t_coder *c);
 void		release_both(t_coder *c);
 
 /* dongle_wait.c     */
-int			wait_for_dongle(t_dongle *d, t_coder *c);
+int			wait_for_both(t_coder *c);
+int			wait_alone(t_coder *c);
 
 /* coder.c           */
 void		*coder_routine(void *arg);
@@ -174,5 +176,6 @@ void		do_debug(t_coder *c);
 void		do_refactor(t_coder *c);
 
 /* monitor.c         */
+void		*monitor_routine(void *arg);
 
 #endif

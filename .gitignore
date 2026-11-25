@@ -4,3 +4,4 @@ codexion
 tests/
 test_fail
 test_heap
+compile_flags.txt

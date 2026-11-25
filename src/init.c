@@ -6,7 +6,7 @@
 /*   By: Zoja <Zoja@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/22 14:01:55 by Zoja              #+#    #+#             */
-/*   Updated: 2026/11/22 14:01:56 by Zoja             ###   ########.fr       */
+/*   Updated: 2026/11/25 15:58:36 by Zoja             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ static int	init_dongles(t_sim *sim)
 
 /*
 ** Coder i (0-based) sits between dongle i and dongle (i + 1) % n.
-** first = the dongle with the LOWER index, so everybody grabs in the
-** same global order -> no circular wait -> no deadlock (Day 3).
+** first = the dongle with the LOWER index: every coder LOCKS the two
+** dongle mutexes in this same global order -> no circular wait.
 ** With 1 coder both are dongle 0 (only one dongle on the table).
 */
 static void	link_coder(t_sim *sim, int i)

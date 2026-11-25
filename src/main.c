@@ -6,7 +6,7 @@
 /*   By: Zoja <Zoja@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/22 14:02:03 by Zoja              #+#    #+#             */
-/*   Updated: 2026/11/25 12:16:00 by Zoja             ###   ########.fr       */
+/*   Updated: 2026/11/25 15:58:35 by Zoja             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,21 @@
 static int	run_simulation(t_sim *sim)
 {
 	int	created;
+	int	ok;
 
 	created = start_coders(sim);
-	if (created < sim->p.n_coders)
+	ok = (created == sim->p.n_coders);
+	if (ok)
+		ok = start_monitor(sim);
+	if (!ok)
 	{
 		set_stopped(sim);
 		wake_all(sim);
-		join_coders(sim, created);
-		return (0);
 	}
 	join_coders(sim, created);
-	return (1);
+	if (ok)
+		pthread_join(sim->monitor, NULL);
+	return (ok);
 }
 
 int	main(int argc, char **argv)
