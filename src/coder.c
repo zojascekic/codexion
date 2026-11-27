@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coder.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Zoja <Zoja@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: zscekic <zscekic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/22 14:01:29 by Zoja              #+#    #+#             */
-/*   Updated: 2026/11/25 15:58:31 by Zoja             ###   ########.fr       */
+/*   Updated: 2026/11/27 11:39:07 by zscekic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	*coder_routine(void *arg)
 		if (!take_both(c))
 			break ;
 		do_compile(c);
-		release_both(c);
 		do_debug(c);
 		do_refactor(c);
 	}

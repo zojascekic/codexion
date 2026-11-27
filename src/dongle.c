@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dongle.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Zoja <Zoja@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: zscekic <zscekic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/22 14:01:39 by Zoja              #+#    #+#             */
-/*   Updated: 2026/11/25 15:58:33 by Zoja             ###   ########.fr       */
+/*   Updated: 2026/11/27 11:37:44 by zscekic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,7 @@ int	take_both(t_coder *c)
 	}
 	pthread_mutex_unlock(&c->second->mutex);
 	pthread_mutex_unlock(&c->first->mutex);
-	if (!ok)
-		return (0);
-	log_state(c, "has taken a dongle");
-	log_state(c, "has taken a dongle");
-	return (1);
+	return (ok);
 }
 
 void	release_both(t_coder *c)

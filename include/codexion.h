@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Zoja <Zoja@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: zscekic <zscekic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/22 14:00:53 by Zoja              #+#    #+#             */
-/*   Updated: 2026/11/25 12:58:17 by Zoja             ###   ########.fr       */
+/*   Updated: 2026/11/27 11:31:22 by zscekic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ void		ms_to_timespec(long ms, struct timespec *ts);
 
 /* log.c             */
 void		log_state(t_coder *c, const char *msg);
+void		log_take_and_compile(t_coder *c);
 void		log_burnout(t_sim *sim, int id);
 
 /* state.c           */
